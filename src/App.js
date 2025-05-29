@@ -7,7 +7,7 @@ import { db } from "./firebase";
 import OlympiadTable from "./components/OlympiadTable";
 import MessageForm from "./components/MessageForm";
 // Import Analytics:
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
   const [olympiads, setOlympiads] = useState([]);
