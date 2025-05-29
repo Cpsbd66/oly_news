@@ -56,7 +56,7 @@ const OlympiadTable = ({ olympiads = [] }) => {
                   {o.name}
                 </a>
               </td>
-              <td>{o.organization}</td> {/* This line should display organizer */}
+              <td>{o.organization}</td> 
               <td className={isConcluded ? "text-muted" : ""}>
                 {getCountdown(o.date)}
               </td>
@@ -69,7 +69,7 @@ const OlympiadTable = ({ olympiads = [] }) => {
 
   return (
     <Container className="mt-5">
-      <h2 className="text-center mb-4 page-title">National Olympiad</h2>
+      <h2 className="text-center mb-4 page-title">National Events</h2>
 
       {renderSection(upcoming, "Upcoming Olympiads", "info", false)}
 

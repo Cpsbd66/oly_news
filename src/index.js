@@ -7,16 +7,15 @@ import "./styles.css";
 
 import App from "./App";
 import AdminPage from "./components/AdminPage";
+import MessageForm from "./components/MessageForm";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <Routes>
-      {/* Public table at “/” */}
       <Route path="/" element={<App />} />
-
-      {/* Admin form at “/admin” */}
       <Route path="/admin" element={<AdminPage />} />
+      <Route path="/contact" element={<MessageForm />} />
     </Routes>
   </BrowserRouter>
 );
