@@ -1,11 +1,13 @@
-// src/components/OlympiadTable.js
-import React from "react";
-import { Table, Badge, Container } from "reactstrap";
+import React, { useEffect, useState } from "react";
+import { Table, Badge, Container, Spinner } from "reactstrap";
+import { db } from "../firebase";
+import { collection, getDocs } from "firebase/firestore";
 import moment from "moment";
 
-const OlympiadTable = ({ olympiads = [] }) => {
-  console.log(olympiads); // Log data here to ensure it's passed correctly
-  
+const OlympiadTable = () => {
+  const [olympiads, setOlympiads] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const today = moment();
 
   const getCountdown = (dateStr) => {
@@ -16,7 +18,22 @@ const OlympiadTable = ({ olympiads = [] }) => {
     return "Event Concluded";
   };
 
-  // Split & sort
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const snapshot = await getDocs(collection(db, "olympiads"));
+        const data = snapshot.docs.map((doc) => doc.data());
+        setOlympiads(data);
+      } catch (err) {
+        console.error("Failed to load olympiads:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const upcoming = olympiads
     .filter((o) => moment(o.date, "YYYY-MM-DD").isSameOrAfter(today, "day"))
     .sort((a, b) => moment(a.date).diff(moment(b.date)));
@@ -56,7 +73,7 @@ const OlympiadTable = ({ olympiads = [] }) => {
                   {o.name}
                 </a>
               </td>
-              <td>{o.organization}</td> 
+              <td>{o.organization || "—"}</td>
               <td className={isConcluded ? "text-muted" : ""}>
                 {getCountdown(o.date)}
               </td>
@@ -71,9 +88,16 @@ const OlympiadTable = ({ olympiads = [] }) => {
     <Container className="mt-5">
       <h2 className="text-center mb-4 page-title">National Events</h2>
 
-      {renderSection(upcoming, "Upcoming Olympiads", "info", false)}
-
-      {renderSection(concluded, "Concluded Olympiads", "secondary", true)}
+      {loading ? (
+        <div className="text-center">
+          <Spinner color="primary" />
+        </div>
+      ) : (
+        <>
+          {renderSection(upcoming, "Upcoming Olympiads", "info", false)}
+          {renderSection(concluded, "Concluded Olympiads", "secondary", true)}
+        </>
+      )}
     </Container>
   );
 };

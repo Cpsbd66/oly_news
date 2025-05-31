@@ -1,27 +1,101 @@
-/* src/styles.css */
+/* Global dark mode adjustments */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", sans-serif;
+  transition: background-color 0.3s, color 0.3s;
+}
 
-body {
+.light-mode {
   background-color: #f8f9fa;
+  color: #212529;
 }
 
-h2.page-title {
-  font-family: 'Segoe UI', sans-serif;
-  color: #343a40;
-  margin-bottom: 1rem;
+.dark-mode {
+  background-color: #121212;
+  color: #f1f1f1;
 }
 
-h4.section-title {
-  font-family: 'Segoe UI', sans-serif;
-  color: #495057;
-  margin-top: 2rem;
-  margin-bottom: 0.75rem;
-}
-
-a.olymp-link {
-  color: #007bff;
+a {
   text-decoration: none;
 }
 
-a.olymp-link:hover {
+.dark-mode a {
+  color: #91c9ff !important;
+}
+
+.dark-mode .text-muted {
+  color: #adb5bd !important; /* light‐gray on dark background */
+}
+
+/* -------------------------------------------------------------------
+   DARK-MODE TABLE OVERRIDES
+   ------------------------------------------------------------------- */
+
+/* Base table in dark mode */
+.dark-mode .table {
+  background-color: #1e1e1e;       /* Dark background for the whole table */
+  color: #f1f1f1;                  /* Light text for the table */
+}
+
+/* Table header (thead) in dark mode */
+.dark-mode .table thead th {
+  background-color: #2a2a2a;       /* Slightly lighter than tbody */
+  color: #f1f1f1;                  /* Light text for headers */
+  border-color: #444;              /* Darker border */
+}
+
+/* Table body rows/cells in dark mode */
+.dark-mode .table tbody td {
+  background-color: #1e1e1e;       /* Match the table background */
+  color: #f1f1f1;                  /* Light text for cells */
+  border-color: #444;              /* Dark border between rows */
+}
+
+/* Ensure links inside table get a readable color */
+.dark-mode .table a {
+  color: #91c9ff;                  /* Light blue for links */
+}
+
+/* Row hover state in dark mode */
+.dark-mode .table tbody tr:hover {
+  background-color: #333;          /* A bit lighter on hover */
+}
+
+/* If you use table-dark / table-striped classes, override those too */
+.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+  background-color: #252525;       /* Slight contrast on striped rows */
+}
+
+/* Footer styling */
+footer {
+  padding: 1rem 0;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
+footer a {
+  margin: 0 1rem;
+  color: inherit;
+  transition: color 0.2s;
+}
+
+footer a:hover {
   text-decoration: underline;
+}
+
+.dark-mode footer {
+  background-color: #1c1c1c;
+  color: #ccc;
+}
+
+/* Navbar branding */
+.navbar-brand-logo {
+  width: 32px;
+  height: 32px;
+  margin-right: 0.5rem;
+  object-fit: contain;
+  background: white;
+  border-radius: 50%;
 }

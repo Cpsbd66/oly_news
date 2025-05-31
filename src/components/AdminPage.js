@@ -161,7 +161,11 @@ const AdminPage = () => {
                     <Button
                       color="danger"
                       size="sm"
-                      onClick={() => handleDelete(event.id)}
+                      onClick={() => {
+                        if (window.confirm(`Are you sure you want to delete "${event.name}"?`)) {
+                          handleDelete(event.id);
+                        }
+                      }}
                     >
                       Delete
                     </Button>
