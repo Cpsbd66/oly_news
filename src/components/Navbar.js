@@ -1,4 +1,3 @@
-// src/components/Navbar.js
 import React, { useContext, useState } from "react";
 import {
   Navbar,
@@ -27,29 +26,40 @@ const MainNavbar = () => {
   const { darkMode, toggleTheme } = useContext(ThemeContext);
 
   return (
-    <Navbar expand="md" className={`shadow-sm ${darkMode ? "navbar-dark bg-dark" : "navbar-light bg-light"}`}>
+    <Navbar
+      expand="md"
+      className={`shadow-sm ${darkMode ? "navbar-dark bg-dark" : "navbar-light bg-light"}`}
+    >
       <Container className="d-flex justify-content-between align-items-center">
         <NavbarBrand tag={RRNavLink} to="/" className="fw-bold d-flex align-items-center">
           <img
             src={darkMode ? "/logo_dark.png" : "/logo_light.png"}
-            alt="L"
+            alt="Kytalist Logo"
             className="navbar-brand-logo"
           />
           Kytalist
         </NavbarBrand>
         <NavbarToggler onClick={toggle} />
-        <Collapse isOpen={isOpen} navbar>
-          <Nav className="ms-auto" navbar>
+      </Container>
+
+      <Collapse isOpen={isOpen} navbar>
+        <div className="w-100 d-flex flex-column flex-md-row align-items-center justify-content-between px-3">
+          {/* Centered Nav */}
+          <Nav className="text-center justify-content-center flex-grow-1" navbar>
             <NavItem>
               <NavLink tag={RRNavLink} to="/" className="nav-link">
                 Home
               </NavLink>
             </NavItem>
             <Dropdown nav isOpen={dropdownOpen} toggle={toggleDropdown}>
-              <DropdownToggle nav caret>
+              <DropdownToggle nav caret className="nav-link">
                 Contact
               </DropdownToggle>
-              <DropdownMenu end>
+              <DropdownMenu
+                className={`custom-dropdown text-center ${
+                  darkMode ? "dropdown-dark" : ""
+                }`}
+              >
                 <DropdownItem tag={RRNavLink} to="/contact/add-event">
                   Add Event
                 </DropdownItem>
@@ -58,14 +68,20 @@ const MainNavbar = () => {
                 </DropdownItem>
               </DropdownMenu>
             </Dropdown>
-            <NavItem className="ms-3">
-              <Button color={darkMode ? "secondary" : "dark"} size="sm" onClick={toggleTheme}>
-                {darkMode ? "☀ Light" : "🌙 Dark"}
-              </Button>
-            </NavItem>
           </Nav>
-        </Collapse>
-      </Container>
+
+          {/* Right-aligned Toggle */}
+          <div className="mt-2 mt-md-0">
+            <Button
+              color={darkMode ? "secondary" : "dark"}
+              size="sm"
+              onClick={toggleTheme}
+            >
+              {darkMode ? "☀️ Light" : "🌙 Dark"}
+            </Button>
+          </div>
+        </div>
+      </Collapse>
     </Navbar>
   );
 };

@@ -257,7 +257,7 @@ const AdminPage = () => {
                       <option value="">Select Type</option>
                       <option>Online</option>
                       <option>Offline</option>
-                      <option>Both</option>
+                      <option>Online & Offline</option>
                     </Input>
                   </FormGroup>
                 </Form>

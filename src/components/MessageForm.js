@@ -34,16 +34,16 @@ const MessageForm = () => {
 
   emailjs
     .send(
-      "service_2yxx88j",           // ✅ your service ID
-      "template_hxjkx8y",          // ✅ your template ID
-      {
-        from_name: form.name,
-        reply_to: form.email,
-        subject: form.type,
-        message: form.message,
-      },
-      "kcME17fN5qPQ7lXLF"          // ✅ your public key
-    )
+        process.env.REACT_APP_EMAILJS_SERVICE,
+        process.env.REACT_APP_EMAILJS_TEMPLATE,
+        {
+          from_name: form.name,
+          reply_to: form.email,
+          subject: defaultType,
+          message: form.message,
+        },
+        process.env.REACT_APP_EMAILJS_PUBLIC
+      )
     .then(
       () => {
         setStatus("success");

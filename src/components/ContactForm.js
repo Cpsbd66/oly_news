@@ -14,13 +14,22 @@ import {
 import emailjs from "@emailjs/browser";
 
 const ContactForm = ({ defaultType }) => {
-  // Initialize the form with no “type” field the user can change:
   const [form, setForm] = useState({
     name: "",
     email: "",
     message: "",
   });
   const [status, setStatus] = useState(null); // "success" | "error"
+
+  // Determine placeholder based on defaultType:
+  const messagePlaceholder =
+    defaultType === "Report Mistakes"
+      ? `Mention the event name and then the mistake.`
+      : `Name of the event:
+Date:
+Link:
+Organization:
+Type (Online / Offline / Both):`;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,15 +41,15 @@ const ContactForm = ({ defaultType }) => {
 
     emailjs
       .send(
-        "service_2yxx88j",           // your service ID
-        "template_hxjkx8y",          // your template ID
+        process.env.REACT_APP_EMAILJS_SERVICE,
+        process.env.REACT_APP_EMAILJS_TEMPLATE,
         {
           from_name: form.name,
           reply_to: form.email,
-          subject: defaultType,      // use the prop here
+          subject: defaultType,
           message: form.message,
         },
-        "kcME17fN5qPQ7lXLF"          // your public key
+        process.env.REACT_APP_EMAILJS_PUBLIC
       )
       .then(
         () => {
@@ -55,7 +64,7 @@ const ContactForm = ({ defaultType }) => {
 
   return (
     <Container className="mt-5">
-      {/* Use defaultType as the heading */}
+      {/* Heading shows the defaultType */}
       <h2 className="mb-4 text-center">{defaultType}</h2>
       <Row className="justify-content-center">
         <Col md={8}>
@@ -76,6 +85,7 @@ const ContactForm = ({ defaultType }) => {
                 value={form.name}
                 onChange={handleChange}
                 required
+                placeholder="e.g. John Doe"
               />
             </FormGroup>
 
@@ -88,6 +98,7 @@ const ContactForm = ({ defaultType }) => {
                 value={form.email}
                 onChange={handleChange}
                 required
+                placeholder="e.g. john@example.com"
               />
             </FormGroup>
 
@@ -97,9 +108,10 @@ const ContactForm = ({ defaultType }) => {
                 type="textarea"
                 name="message"
                 id="message"
-                rows="5"
+                rows="6"
                 value={form.message}
                 onChange={handleChange}
+                placeholder={messagePlaceholder}
                 required
               />
             </FormGroup>
