@@ -30,20 +30,25 @@ const MainNavbar = () => {
       className={`shadow-sm ${darkMode ? "navbar-dark bg-dark" : "navbar-light bg-light"}`}
     >
       <Container className="d-flex justify-content-between align-items-center">
-        <NavbarBrand tag={RRNavLink} to="/" className="fw-bold d-flex align-items-center">
-          <img
-            src={darkMode ? "/logo_dark.png" : "/logo_light.png"}
-            alt="Kytalist Logo"
-            className="navbar-brand-logo"
-          />
+      <NavbarBrand tag={RRNavLink} to="/" className="fw-bold d-flex align-items-center">
+        <img
+          src={darkMode ? "/logo_dark.png" : "/logo_light.png"}
+          alt="Kytalist Logo"
+          className="navbar-brand-logo"
+        />
+        <span className="d-flex align-items-center ms-2">
           Kytalist
-        </NavbarBrand>
+          <span className="beta-label ms-2">
+            <em>βeta</em>
+          </span>
+        </span>
+      </NavbarBrand>
+
         <NavbarToggler onClick={toggle} />
       </Container>
 
       <Collapse isOpen={isOpen} navbar>
         <div className="w-100 d-flex flex-column flex-md-row align-items-center justify-content-between px-3">
-          {/* Centered Nav */}
           <Nav className="text-center justify-content-center flex-grow-1" navbar>
             <NavItem>
               <NavLink tag={RRNavLink} to="/" className="nav-link">

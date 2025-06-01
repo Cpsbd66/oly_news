@@ -29,7 +29,8 @@ const ContactForm = ({ defaultType }) => {
 Date:
 Link:
 Organization:
-Type (Online / Offline / Both):`;
+Type (Online / Offline / Both):
+Drive link for attachments: `;
 
   const handleChange = (e) => {
     const { name, value } = e.target;

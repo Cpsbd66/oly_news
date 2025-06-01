@@ -14,6 +14,7 @@ const OlympiadTable = ({ olympiads = [] }) => {
     return "Event Concluded";
   };
 
+
   const upcoming = olympiads
     .filter((o) => moment(o.date, "YYYY-MM-DD").isSameOrAfter(today, "day"))
     .sort((a, b) => moment(a.date).diff(moment(b.date)));

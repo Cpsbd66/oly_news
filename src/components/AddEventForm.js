@@ -92,6 +92,7 @@ const AddEventForm = ({ onAdd }) => {
           </Input>
         </FormGroup>
 
+
         <Button color="success" type="submit">
           Add Event
         </Button>

@@ -13,12 +13,8 @@ const Footer = () => {
 
         {/* Navigation Links */}
         <div className="mb-2 text-center">
-          <NavLink to="/" className="me-3">
-            Home
-          </NavLink>
-          <NavLink to="/contact/add-event" className="me-3">
-            Add Event
-          </NavLink>
+          <NavLink to="/" className="me-3">Home</NavLink>
+          <NavLink to="/contact/add-event" className="me-3">Add Event</NavLink>
           <NavLink to="/contact/report">Report Mistake</NavLink>
         </div>
 

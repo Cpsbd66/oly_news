@@ -38,7 +38,7 @@ const SubscribeForm = () => {
         and related events.
       </p>
 
-      {/* Centered form container */}
+      {/* Form container */}
       <Form onSubmit={handleSubmit} className="d-flex justify-content-center flex-wrap">
         {/* Email input */}
         <Label for="subscribeEmail" className="visually-hidden">

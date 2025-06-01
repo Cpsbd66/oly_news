@@ -3,13 +3,13 @@ import { getFirestore, collection, getDocs, where, addDoc, query } from "firebas
 import fs from "fs";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyD7Ld7a8hZ4BgxzctWFstjBoQgv-U0zIFU",
-  authDomain: "olynews-447a3.firebaseapp.com",
-  projectId: "olynews-447a3",
-  storageBucket: "olynews-447a3.firebasestorage.app",
-  messagingSenderId: "1020630728766",
-  appId: "1:1020630728766:web:914ccf8aef6149380ad16f",
-  measurementId: "G-CXBB4ML1M9"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);

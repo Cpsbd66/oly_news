@@ -252,8 +252,7 @@ const AdminPage = () => {
                           ...currentEvent,
                           type: e.target.value,
                         })
-                      }
-                    >
+                      }>
                       <option value="">Select Type</option>
                       <option>Online</option>
                       <option>Offline</option>

@@ -24,7 +24,6 @@ function App() {
     document.body.classList.toggle("dark-mode", darkMode);
     document.body.classList.toggle("light-mode", !darkMode);
   }, [darkMode]);
-
   useEffect(() => {
     const fetchData = async () => {
       const snapshot = await getDocs(collection(db, "olympiads"));

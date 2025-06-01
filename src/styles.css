@@ -398,3 +398,25 @@ input:checked + .slider::before {
   background-color: #f8f9fa;
   color: #111;
 }
+
+/* Stylish 'beta' badge beside Kytalist */
+.beta-label {
+  font-size: 0.75rem;
+  font-style: italic;
+  font-weight: 600;
+  margin-left: 6px;
+  line-height: 1;
+  color: #0f0124; /* dark purple for light mode */
+}
+.beta-label:hover {
+  text-shadow: 0 0 1px #5e2ca5;
+}
+
+.dark-mode .beta-label {
+  color: #8fd6ff; /* Blueish white for dark mode */
+}
+
+.dark-mode .beta-label:hover {
+  text-shadow: 0 0 2px #d0e7ff;
+}
+
