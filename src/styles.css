@@ -345,8 +345,8 @@ SUBSCRIBE FORM STYLES
 .theme-switch {
   position: relative;
   display: inline-block;
-  width: 50px;
-  height: 26px;
+  width: 54px;
+  height: 28px;
 }
 
 .theme-switch input {
@@ -355,8 +355,7 @@ SUBSCRIBE FORM STYLES
   height: 0;
 }
 
-
-/* Toggle switch track */
+/* Track */
 .slider {
   position: absolute;
   cursor: pointer;
@@ -365,38 +364,37 @@ SUBSCRIBE FORM STYLES
   right: 0;
   bottom: 0;
   background-color: #ccc;
-  transition: 0.4s;
+  transition: background-color 0.4s ease;
   border-radius: 34px;
 }
 
-/* Light mode (unchecked) sun icon */
+/* Knob */
 .slider::before {
   position: absolute;
-  content: "🌞";
-  height: 20px;
-  width: 20px;
-  left: 3px;
-  bottom: 3px;
-  background-color: white;
-  color: black;
-  transition: 0.4s;
-  border-radius: 50%;
-  font-size: 14px;
-
+  content: "☀️";
   display: flex;
   align-items: center;
   justify-content: center;
-  line-height: 1; /* prevent vertical misalignment */
-  text-align: center;
+  height: 22px;
+  width: 22px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: transform 0.4s ease, content 0.4s ease, background-color 0.4s ease;
+  border-radius: 50%;
+  font-size: 16px;
+  line-height: 1;
+  box-shadow: 0 0 4px rgba(0,0,0,0.2);
 }
 
-/* Dark mode (checked) background + moon icon */
+/* Dark mode activated */
 input:checked + .slider {
-  background-color: #000;
+  background-color: #111;
 }
 
 input:checked + .slider::before {
-  transform: translateX(24px);
+  transform: translateX(26px);
   content: "🌙";
-  color: white;
+  background-color: #f8f9fa;
+  color: #111;
 }
