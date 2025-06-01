@@ -1,4 +1,3 @@
-// src/components/OlympiadTable.js
 import React from "react";
 import { Table, Badge, Container } from "reactstrap";
 import moment from "moment";
@@ -7,6 +6,7 @@ const OlympiadTable = ({ olympiads = [] }) => {
   const today = moment();
 
   const getCountdown = (dateStr) => {
+    if (!dateStr) return "Date Pending";
     const date = moment(dateStr, "YYYY-MM-DD");
     const diff = date.diff(today, "days");
     if (diff > 0) return `${diff} days left`;
@@ -14,12 +14,16 @@ const OlympiadTable = ({ olympiads = [] }) => {
     return "Event Concluded";
   };
 
+  // Handle events with and without dates
+  const withDate = olympiads.filter((o) => o.date);
+  const noDate = olympiads.filter((o) => !o.date);
 
-  const upcoming = olympiads
+  const upcoming = withDate
     .filter((o) => moment(o.date, "YYYY-MM-DD").isSameOrAfter(today, "day"))
-    .sort((a, b) => moment(a.date).diff(moment(b.date)));
+    .sort((a, b) => moment(a.date).diff(moment(b.date)))
+    .concat(noDate); // Add no-date events to bottom of upcoming
 
-  const concluded = olympiads
+  const concluded = withDate
     .filter((o) => moment(o.date, "YYYY-MM-DD").isBefore(today, "day"))
     .sort((a, b) => moment(b.date).diff(moment(a.date)));
 
@@ -44,7 +48,9 @@ const OlympiadTable = ({ olympiads = [] }) => {
         <tbody>
           {data.map((o, i) => (
             <tr key={i}>
-              <td>{o.date}</td>
+              <td className={!o.date ? "text-muted fst-italic" : ""}>
+                {o.date || "TBA"}
+              </td>
               <td>
                 <a
                   href={o.link}
@@ -73,8 +79,7 @@ const OlympiadTable = ({ olympiads = [] }) => {
                   "—"
                 )}
               </td>
-
-              <td className={isConcluded ? "text-muted" : ""}>
+              <td className={!o.date ? "text-muted fst-italic" : isConcluded ? "text-muted" : ""}>
                 {getCountdown(o.date)}
               </td>
             </tr>

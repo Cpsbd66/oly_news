@@ -89,7 +89,7 @@ const AdminPage = () => {
   }, []);
 
   return (
-    <Container className="mt-5">
+    <Container fluid className="py-4 px-3">
       {!user ? (
         <Form onSubmit={handleLogin}>
           <h4 className="mb-3">Admin Login</h4>

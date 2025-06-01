@@ -1,29 +1,35 @@
-import React, { useEffect, useState, createContext } from "react";
+// src/App.js
+import React, { useState, useEffect, createContext } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import OlympiadTable from "./components/OlympiadTable";
 import ContactForm from "./components/ContactForm";
 import AdminPage from "./components/AdminPage";
 import MainNavbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import { db } from "./firebase";
 import { collection, getDocs } from "firebase/firestore";
+import { db } from "./firebase";
+import "./styles.css";
 
 export const ThemeContext = createContext();
 
 function App() {
   const location = useLocation();
-  const isAdmin = location.pathname.startsWith("/admin");
+  const isAdmin = location.pathname === "/admin";
+
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem("theme");
+    return saved === "dark";
+  });
+
+  useEffect(() => {
+    localStorage.setItem("theme", darkMode ? "dark" : "light");
+  }, [darkMode]);
+
+  const toggleTheme = () => setDarkMode(!darkMode);
 
   const [olympiads, setOlympiads] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
 
-  const toggleTheme = () => setDarkMode((prev) => !prev);
-
-  useEffect(() => {
-    document.body.classList.toggle("dark-mode", darkMode);
-    document.body.classList.toggle("light-mode", !darkMode);
-  }, [darkMode]);
   useEffect(() => {
     const fetchData = async () => {
       const snapshot = await getDocs(collection(db, "olympiads"));
@@ -36,23 +42,25 @@ function App() {
 
   return (
     <ThemeContext.Provider value={{ darkMode, toggleTheme }}>
-      {!isAdmin && <MainNavbar />}
-      <Routes>
-        <Route
-          path="/"
-          element={<OlympiadTable olympiads={olympiads} loading={loading} />}
-        />
-        <Route
-          path="/contact/add-event"
-          element={<ContactForm defaultType="Request to Add Event" />}
-        />
-        <Route
-          path="/contact/report"
-          element={<ContactForm defaultType="Report Mistakes" />}
-        />
-        <Route path="/admin" element={<AdminPage />} />
-      </Routes>
-      {!isAdmin && <Footer />}
+      <div className={darkMode ? "dark-mode" : "light-mode"}>
+        {!isAdmin && <MainNavbar />}
+        <Routes>
+          <Route
+            path="/"
+            element={<OlympiadTable olympiads={olympiads} loading={loading} />}
+          />
+          <Route
+            path="/contact/add-event"
+            element={<ContactForm defaultType="Request to Add Event" />}
+          />
+          <Route
+            path="/contact/report"
+            element={<ContactForm defaultType="Report Mistakes" />}
+          />
+          <Route path="/admin" element={<AdminPage />} />
+        </Routes>
+        {!isAdmin && <Footer />}
+      </div>
     </ThemeContext.Provider>
   );
 }
