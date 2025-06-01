@@ -11,8 +11,7 @@ import {
   Dropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem,
-  Button,
+  DropdownItem
 } from "reactstrap";
 import { NavLink as RRNavLink } from "react-router-dom";
 import { ThemeContext } from "../App";
@@ -70,15 +69,12 @@ const MainNavbar = () => {
             </Dropdown>
           </Nav>
 
-          {/* Right-aligned Toggle */}
-          <div className="mt-2 mt-md-0">
-            <Button
-              color={darkMode ? "secondary" : "dark"}
-              size="sm"
-              onClick={toggleTheme}
-            >
-              {darkMode ? "☀️ Light" : "🌙 Dark"}
-            </Button>
+          {/* Right-aligned Fancy Theme Switch */}
+          <div className="theme-switch-wrapper ms-3 mt-2 mt-md-0">
+            <label className="theme-switch">
+              <input type="checkbox" checked={darkMode} onChange={toggleTheme} />
+              <span className="slider round"></span>
+            </label>
           </div>
         </div>
       </Collapse>
