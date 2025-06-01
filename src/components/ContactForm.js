@@ -118,7 +118,7 @@ Drive link for attachments: `;
             </FormGroup>
 
             <Button color="primary" type="submit">
-              Send {defaultType}
+              {defaultType}
             </Button>
           </Form>
         </Col>
