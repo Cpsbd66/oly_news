@@ -31,7 +31,8 @@ const MainNavbar = () => {
       <Container className="d-flex justify-content-between align-items-center">
         <NavbarBrand tag={RRNavLink} to="/" className="fw-bold d-flex align-items-center">
           <img
-            src="../logo.png"
+            src={darkMode ? "/logo_dark.png" : "/logo_light.png"}
+            alt="L"
             className="navbar-brand-logo"
           />
           Kytalist

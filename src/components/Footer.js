@@ -10,7 +10,7 @@ const Footer = () => {
         <NavLink to="/contact/add-event">Add Event</NavLink>
         <NavLink to="/contact/report">Report Mistake</NavLink>
       </div>
-      <div className="mt-2 text-muted">© 2025 Olympiad Portal</div>
+      <div className="mt-2 text-muted">© Kytalist</div>
     </footer>
   );
 };

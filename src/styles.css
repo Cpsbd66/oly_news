@@ -29,9 +29,7 @@ a {
   color: #adb5bd !important; /* light‐gray on dark background */
 }
 
-/* -------------------------------------------------------------------
-   DARK-MODE TABLE OVERRIDES
-   ------------------------------------------------------------------- */
+/* DARK-MODE TABLE OVERRIDES*/
 
 /* Base table in dark mode */
 .dark-mode .table {
@@ -96,6 +94,21 @@ footer a:hover {
   height: 32px;
   margin-right: 0.5rem;
   object-fit: contain;
-  background: white;
   border-radius: 50%;
+}
+ 
+/* Event Type Badges */
+.dark-mode .badge.bg-info {
+  background-color: #0dcaf0 !important;
+  color: #000;
+}
+
+.dark-mode .badge.bg-success {
+  background-color: #198754 !important;
+  color: #fff;
+}
+
+.dark-mode .badge.bg-warning {
+  background-color: #ffc107 !important;
+  color: #000;
 }

@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Table, Badge, Container, Spinner } from "reactstrap";
-import { db } from "../firebase";
-import { collection, getDocs } from "firebase/firestore";
+// src/components/OlympiadTable.js
+import React from "react";
+import { Table, Badge, Container } from "reactstrap";
 import moment from "moment";
 
-const OlympiadTable = () => {
-  const [olympiads, setOlympiads] = useState([]);
-  const [loading, setLoading] = useState(true);
-
+const OlympiadTable = ({ olympiads = [] }) => {
   const today = moment();
 
   const getCountdown = (dateStr) => {
@@ -17,22 +13,6 @@ const OlympiadTable = () => {
     if (diff === 0) return "Happening Today";
     return "Event Concluded";
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const snapshot = await getDocs(collection(db, "olympiads"));
-        const data = snapshot.docs.map((doc) => doc.data());
-        setOlympiads(data);
-      } catch (err) {
-        console.error("Failed to load olympiads:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, []);
 
   const upcoming = olympiads
     .filter((o) => moment(o.date, "YYYY-MM-DD").isSameOrAfter(today, "day"))
@@ -55,7 +35,8 @@ const OlympiadTable = () => {
           <tr>
             <th>Date</th>
             <th>Name</th>
-            <th>Organizer</th>
+            <th>Organization</th>
+            <th>Type</th>
             <th>Countdown</th>
           </tr>
         </thead>
@@ -73,7 +54,25 @@ const OlympiadTable = () => {
                   {o.name}
                 </a>
               </td>
-              <td>{o.organization || "—"}</td>
+              <td>{o.organization}</td>
+              <td>
+                {o.type ? (
+                  <span
+                    className={`badge ${
+                      o.type === "Online"
+                        ? "bg-info"
+                        : o.type === "Offline"
+                        ? "bg-success"
+                        : "bg-warning text-dark"
+                    }`}
+                  >
+                    {o.type}
+                  </span>
+                ) : (
+                  "—"
+                )}
+              </td>
+
               <td className={isConcluded ? "text-muted" : ""}>
                 {getCountdown(o.date)}
               </td>
@@ -87,17 +86,8 @@ const OlympiadTable = () => {
   return (
     <Container className="mt-5">
       <h2 className="text-center mb-4 page-title">National Events</h2>
-
-      {loading ? (
-        <div className="text-center">
-          <Spinner color="primary" />
-        </div>
-      ) : (
-        <>
-          {renderSection(upcoming, "Upcoming Olympiads", "info", false)}
-          {renderSection(concluded, "Concluded Olympiads", "secondary", true)}
-        </>
-      )}
+      {renderSection(upcoming, "Upcoming Olympiads", "info", false)}
+      {renderSection(concluded, "Concluded Olympiads", "secondary", true)}
     </Container>
   );
 };

@@ -132,6 +132,7 @@ const AdminPage = () => {
                 <th>Name</th>
                 <th>Organization</th>
                 <th>Link</th>
+                <th>Type</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -150,6 +151,7 @@ const AdminPage = () => {
                       Link
                     </a>
                   </td>
+                  <td>{event.type || "—"}</td>
                   <td>
                     <Button
                       color="warning"
@@ -162,7 +164,11 @@ const AdminPage = () => {
                       color="danger"
                       size="sm"
                       onClick={() => {
-                        if (window.confirm(`Are you sure you want to delete "${event.name}"?`)) {
+                        if (
+                          window.confirm(
+                            `Are you sure you want to delete "${event.name}"?`
+                          )
+                        ) {
                           handleDelete(event.id);
                         }
                       }}
@@ -234,6 +240,25 @@ const AdminPage = () => {
                         })
                       }
                     />
+                  </FormGroup>
+                  <FormGroup>
+                    <Label for="editType">Type</Label>
+                    <Input
+                      id="editType"
+                      type="select"
+                      value={currentEvent.type || ""}
+                      onChange={(e) =>
+                        setCurrentEvent({
+                          ...currentEvent,
+                          type: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="">Select Type</option>
+                      <option>Online</option>
+                      <option>Offline</option>
+                      <option>Both</option>
+                    </Input>
                   </FormGroup>
                 </Form>
               )}

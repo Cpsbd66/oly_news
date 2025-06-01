@@ -1,77 +1,102 @@
 // src/components/AddEventForm.js
 import React, { useState } from "react";
-import { Button, Form, FormGroup, Label, Input } from "reactstrap";
+import { Form, FormGroup, Label, Input, Button, Container } from "reactstrap";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
 const AddEventForm = ({ onAdd }) => {
-  const [eventData, setEventData] = useState({
-    name: "",
+  const [form, setForm] = useState({
     date: "",
-    link: "",
+    name: "",
     organization: "",
+    link: "",
+    type: "", // new
   });
-
-  const handleChange = (e) => {
-    setEventData({ ...eventData, [e.target.name]: e.target.value });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await addDoc(collection(db, "olympiads"), eventData);
-    setEventData({ name: "", date: "", link: "", organization: "" });
-    if (onAdd) onAdd();
+    try {
+      await addDoc(collection(db, "olympiads"), form);
+      alert("Event added!");
+      setForm({
+        date: "",
+        name: "",
+        organization: "",
+        link: "",
+        type: "", // reset too
+      });
+      onAdd(); // refresh table
+    } catch (err) {
+      console.error(err);
+      alert("Error adding event.");
+    }
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <FormGroup>
-        <Label for="name">Olympiad Name</Label>
-        <Input
-          id="name"
-          name="name"
-          value={eventData.name}
-          onChange={handleChange}
-          required
-        />
-      </FormGroup>
+    <Container className="mb-4">
+      <Form onSubmit={handleSubmit}>
+        <FormGroup>
+          <Label for="date">Date</Label>
+          <Input
+            type="date"
+            id="date"
+            value={form.date}
+            onChange={(e) => setForm({ ...form, date: e.target.value })}
+            required
+          />
+        </FormGroup>
 
-      <FormGroup>
-        <Label for="date">Date</Label>
-        <Input
-          id="date"
-          name="date"
-          type="date"
-          value={eventData.date}
-          onChange={handleChange}
-          required
-        />
-      </FormGroup>
+        <FormGroup>
+          <Label for="name">Name</Label>
+          <Input
+            id="name"
+            value={form.name}
+            onChange={(e) => setForm({ ...form, name: e.target.value })}
+            required
+          />
+        </FormGroup>
 
-      <FormGroup>
-        <Label for="link">Link</Label>
-        <Input
-          id="link"
-          name="link"
-          value={eventData.link}
-          onChange={handleChange}
-          required
-        />
-      </FormGroup>
+        <FormGroup>
+          <Label for="organization">Organization</Label>
+          <Input
+            id="organization"
+            value={form.organization}
+            onChange={(e) => setForm({ ...form, organization: e.target.value })}
+            required
+          />
+        </FormGroup>
 
-      <FormGroup>
-        <Label for="organization">Organization</Label>
-        <Input
-          id="organization"
-          name="organization"
-          value={eventData.organization}
-          onChange={handleChange}
-          required
-        />
-      </FormGroup>
+        <FormGroup>
+          <Label for="link">Link</Label>
+          <Input
+            id="link"
+            value={form.link}
+            onChange={(e) => setForm({ ...form, link: e.target.value })}
+            required
+          />
+        </FormGroup>
 
-      <Button type="submit" color="primary">Add Olympiad</Button>
-    </Form>
+        <FormGroup>
+          <Label for="type">Type</Label>
+          <Input
+            id="type"
+            type="select"
+            value={form.type}
+            onChange={(e) => setForm({ ...form, type: e.target.value })}
+            required
+          >
+            <option value="">Select Type</option>
+            <option>Online</option>
+            <option>Offline</option>
+            <option>Both</option>
+          </Input>
+        </FormGroup>
+
+        <Button color="success" type="submit">
+          Add Event
+        </Button>
+      </Form>
+    </Container>
   );
 };
 
