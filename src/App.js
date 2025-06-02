@@ -18,8 +18,8 @@ function App() {
 
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem("theme");
-    return saved === "dark";
-  });
+    return saved ? saved === "dark" : true; // default is dark
+});
 
   useEffect(() => {
     localStorage.setItem("theme", darkMode ? "dark" : "light");
