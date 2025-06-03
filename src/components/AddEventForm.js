@@ -10,7 +10,8 @@ const AddEventForm = ({ onAdd }) => {
     name: "",
     organization: "",
     link: "",
-    type: "", // new
+    type: "", 
+    category: ""
   });
 
   const handleSubmit = async (e) => {
@@ -23,7 +24,7 @@ const AddEventForm = ({ onAdd }) => {
         name: "",
         organization: "",
         link: "",
-        type: "", // reset too
+        type: "",
       });
       onAdd(); // refresh table
     } catch (err) {
@@ -90,6 +91,45 @@ const AddEventForm = ({ onAdd }) => {
             <option>Offline</option>
             <option>Online & Offline</option>
           </Input>
+        </FormGroup>
+        <FormGroup>
+          <Label for="category">Categories</Label>
+          <div className="d-flex flex-wrap">
+            {[
+              "National",
+              "Math & Science",
+              "Debate",
+              "Cultural & Language",
+              "Programming",
+              "Technology",
+              "Sports",
+              "Miscellaneous",
+            ].map((cat) => (
+              <FormGroup check inline key={cat} className="me-3 mb-2">
+                <Label check>
+                  <Input
+                    type="checkbox"
+                    checked={form.category?.includes(cat)}
+                    onChange={() => {
+                      const existing = form.category || [];
+                      if (existing.includes(cat)) {
+                        setForm({
+                          ...form,
+                          category: existing.filter((c) => c !== cat),
+                        });
+                      } else {
+                        setForm({
+                          ...form,
+                          category: [...existing, cat],
+                        });
+                      }
+                    }}
+                  />{" "}
+                  {cat}
+                </Label>
+              </FormGroup>
+            ))}
+          </div>
         </FormGroup>
 
 

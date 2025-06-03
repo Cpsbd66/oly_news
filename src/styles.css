@@ -437,3 +437,73 @@ input:checked + .slider::before {
   background-color: #495057 !important;
   color: #fff !important;
 }
+
+/* Search Bar */
+
+.search-input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font-size: 1rem;
+  border-radius: 0.375rem;
+  border: 1px solid #ced4da;
+  transition: border-color 0.2s ease;
+}
+
+
+.search-input:focus {
+  border-color: #0d6efd;
+  outline: none;
+}
+
+.dark-mode .search-input {
+  background-color: #2c2c2c;
+  color: #f1f1f1;
+  border: 1px solid #444;
+}
+
+.dark-mode .search-input::placeholder {
+  color: #aaa;
+}
+
+/* Match button height with search bar */
+.filter-toggle-btn {
+  height: 100%;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border-radius: 0.375rem;
+}
+
+@media (max-width: 576px) {
+  .search-input,
+  .filter-toggle-btn {
+    font-size: 0.95rem;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* Base Filter Button - Light Mode */
+.text-filter {
+  color: #1c3f72;
+  font-weight: 600;
+  background: #fff;
+  border: 1px solid #ccc;
+}
+
+/* Hover effect in light mode */
+.text-filter:hover {
+  color: #295ba7;
+  border-color: #999;
+}
+
+/* Dark Mode Button Styling */
+.dark-mode .text-filter {
+  color: #66b2ff;
+  background-color: #121212;
+  border-color: #444;
+}
+
+/* Dark Mode Hover */
+.dark-mode .text-filter:hover {
+  color: #89ccff;
+  border-color: #666;
+}

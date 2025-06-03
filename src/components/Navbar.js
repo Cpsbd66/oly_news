@@ -52,7 +52,7 @@ const MainNavbar = () => {
           <Nav className="text-center justify-content-center flex-grow-1" navbar>
             <NavItem>
               <NavLink tag={RRNavLink} to="/" className="nav-link">
-                Home
+                Events
               </NavLink>
             </NavItem>
             <Dropdown nav isOpen={dropdownOpen} toggle={toggleDropdown}>

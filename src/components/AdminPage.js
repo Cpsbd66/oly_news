@@ -133,6 +133,7 @@ const AdminPage = () => {
                 <th>Organization</th>
                 <th>Link</th>
                 <th>Type</th>
+                <th>Category</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -152,6 +153,12 @@ const AdminPage = () => {
                     </a>
                   </td>
                   <td>{event.type || "—"}</td>
+                  <td>
+                    {event.category && event.category.length > 0
+                      ? event.category.join(", ")
+                      : "—"}
+                  </td>
+
                   <td>
                     <Button
                       color="warning"
@@ -259,6 +266,48 @@ const AdminPage = () => {
                       <option>Online & Offline</option>
                     </Input>
                   </FormGroup>
+
+                  <FormGroup>
+                    <Label for="editCategories">Category</Label>
+                    <div className="d-flex flex-wrap">
+                      {[
+                        "National",
+                        "Math & Science",
+                        "Debate",
+                        "Cultural & Language",
+                        "Programming",
+                        "Technology",
+                        "Sports",
+                        "Miscellaneous",
+                      ].map((cat) => (
+                        <FormGroup check inline key={cat} className="me-3 mb-2">
+                          <Label check>
+                            <Input
+                              type="checkbox"
+                              checked={
+                                Array.isArray(currentEvent.category) &&
+                                currentEvent.category.includes(cat)
+                              }
+                              onChange={(e) => {
+                                const updatedCategories = Array.isArray(currentEvent.category)
+                                  ? [...currentEvent.category]
+                                  : [];
+                                if (e.target.checked) {
+                                  updatedCategories.push(cat);
+                                } else {
+                                  const index = updatedCategories.indexOf(cat);
+                                  if (index > -1) updatedCategories.splice(index, 1);
+                                }
+                                setCurrentEvent({ ...currentEvent, category: updatedCategories });
+                              }}
+                            />{" "}
+                            {cat}
+                          </Label>
+                        </FormGroup>
+                      ))}
+                    </div>
+                  </FormGroup>
+
                 </Form>
               )}
             </ModalBody>
