@@ -43,23 +43,20 @@ function App() {
   return (
     <ThemeContext.Provider value={{ darkMode, toggleTheme }}>
       <div className={darkMode ? "dark-mode" : "light-mode"}>
-        {!isAdmin && <MainNavbar />}
-        <Routes>
-          <Route
-            path="/"
-            element={<OlympiadTable olympiads={olympiads} loading={loading} />}
-          />
-          <Route
-            path="/contact/add-event"
-            element={<ContactForm defaultType="Request to Add Event" />}
-          />
-          <Route
-            path="/contact/report"
-            element={<ContactForm defaultType="Report Mistakes" />}
-          />
-          <Route path="/admin" element={<AdminPage />} />
-        </Routes>
-        {!isAdmin && <Footer />}
+        <div className="page-wrapper">
+          {!isAdmin && <MainNavbar />}
+
+          <div className="page-content">
+            <Routes>
+              <Route path="/" element={<OlympiadTable olympiads={olympiads} loading={loading} />} />
+              <Route path="/contact/add-event" element={<ContactForm defaultType="Request to Add Event" />} />
+              <Route path="/contact/report" element={<ContactForm defaultType="Report Mistakes" />} />
+              <Route path="/admin" element={<AdminPage />} />
+            </Routes>
+          </div>
+
+          {!isAdmin && <Footer />}
+        </div>
       </div>
     </ThemeContext.Provider>
   );

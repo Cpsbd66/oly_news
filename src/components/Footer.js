@@ -6,7 +6,6 @@ const Footer = () => {
   return (
     <footer className="py-4 mt-5">
       <div className="container">
-        {/* Only one SubscribeForm here */}
         <div className="mb-4">
           <SubscribeForm />
         </div>
