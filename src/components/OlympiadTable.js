@@ -1,5 +1,5 @@
 // src/components/OlympiadTable.js
-import React, { useState } from "react";
+import React, { useState, useMemo, useContext } from "react";
 import {
   Table,
   Badge,
@@ -9,64 +9,82 @@ import {
   Input,
   Row,
   Col,
-  Button
+  Button,
 } from "reactstrap";
 import moment from "moment";
+import { ThemeContext } from "../App";
+import { useLocation } from "react-router-dom";
 
 const OlympiadTable = ({ olympiads = [], loading }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
 
-  const today = moment();
+  const { darkMode } = useContext(ThemeContext);
+  const location = useLocation();
+  const isHomePage = location.pathname === "/";
+
   const allCategories = [
     "National",
     "Math & Science",
     "Debate",
     "Cultural & Language",
     "Programming",
-    "Competitive Programming",
     "Technology",
     "Sports",
-    "Miscellaneous"
+    "Miscellaneous",
   ];
 
-  const handleCheckboxChange = (value, list, setter) => {
-    setter((prev) =>
-      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
+  const today = moment();
+
+  const handleCheckboxChange = (value) => {
+    setSelectedCategories((prev) =>
+      prev.includes(value)
+        ? prev.filter((v) => v !== value)
+        : [...prev, value]
     );
   };
 
   const getCountdown = (dateStr) => {
     if (!dateStr) return "Date Pending";
-    
+
     const todayLocal = moment().utcOffset(6).startOf("day");
     const eventDate = moment(dateStr, "YYYY-MM-DD").utcOffset(6).startOf("day");
-  
+
     const diff = eventDate.diff(todayLocal, "days");
     if (diff > 0) return `${diff} days left`;
     if (diff === 0) return "Happening Today";
     return "Event Concluded";
   };
 
-  const filteredOlympiads = olympiads.filter((event) => {
-    const matchesSearch =
-      event.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      event.organization?.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredOlympiads = useMemo(() => {
+    return olympiads.filter((event) => {
+      // Skip Competitive Programming on homepage
+      if (
+        isHomePage &&
+        Array.isArray(event.category) &&
+        event.category.includes("Competitive Programming")
+      ) {
+        return false;
+      }
 
-    const matchesCategory =
-      selectedCategories.length === 0 ||
-      (Array.isArray(event.category)
-        ? event.category.some((cat) => selectedCategories.includes(cat))
-        : selectedCategories.includes(event.category));
+      const matchesSearch =
+        event.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        event.organization?.toLowerCase().includes(searchTerm.toLowerCase());
 
-    return matchesSearch && matchesCategory;
-  });
+      const matchesCategory =
+        selectedCategories.length === 0 ||
+        (Array.isArray(event.category)
+          ? event.category.some((cat) => selectedCategories.includes(cat))
+          : selectedCategories.includes(event.category));
+
+      return matchesSearch && matchesCategory;
+    });
+  }, [olympiads, searchTerm, selectedCategories, isHomePage]);
 
   const upcoming = filteredOlympiads
     .filter(
-      (o) =>
-        !o.date || moment(o.date, "YYYY-MM-DD").isSameOrAfter(today, "day")
+      (o) => !o.date || moment(o.date, "YYYY-MM-DD").isSameOrAfter(today, "day")
     )
     .sort((a, b) =>
       moment(a.date || "9999-12-31").diff(moment(b.date || "9999-12-31"))
@@ -138,50 +156,41 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
 
   return (
     <Container className="mt-5">
-      <Row className="align-items-stretch mb-3 gx-2 flex-wrap">
-        <Col xs="9" sm="10">
-          <div className="d-flex h-100">
-            <Input
-              type="search"
-              className="form-control search-input"
-              placeholder="Search by name or organization"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
+      {/* Search + Filter toggle */}
+      <Row className="align-items-center justify-content-center mb-3 g-2">
+        <Col xs={9} sm={10} md={6}>
+          <Input
+            type="search"
+            className="form-control search-input"
+            placeholder="Search by name or organization"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </Col>
-        <Col xs="3" sm="2">
-          <div className="d-flex h-100">
-            <Button
-              className="filter-toggle-btn w-100 text-filter"
-              onClick={() => setShowFilters((prev) => !prev)}
-            >
-              {showFilters ? "Hide" : "Filter"}
-            </Button>
-
-          </div>
+        <Col xs="auto">
+          <Button
+            className="filter-toggle-btn text-filter px-4"
+            color={darkMode ? "dark" : "secondary"}
+            onClick={() => setShowFilters((prev) => !prev)}
+          >
+            {showFilters ? "Hide" : "Filter"}
+          </Button>
         </Col>
       </Row>
 
-
+      {/* Category Filters */}
       {showFilters && (
-        <Row className="mb-4">
-          <Col xs="12">
-            <strong className="filter-label">Filter by Category:</strong>
-            <div className="filter-box mt-2">
+        <Row className="mb-4 justify-content-center">
+          <Col xs="12" md="10" className="text-center">
+            <strong className="text-primary">Filter by Category:</strong>
+            <div className="filter-box d-flex flex-wrap justify-content-center mt-2">
               {allCategories.map((cat) => (
                 <FormGroup check inline key={cat} className="me-3">
                   <Label check>
                     <Input
                       type="checkbox"
                       checked={selectedCategories.includes(cat)}
-                      onChange={() =>
-                        handleCheckboxChange(
-                          cat,
-                          selectedCategories,
-                          setSelectedCategories
-                        )
-                      }
+                      onChange={() => handleCheckboxChange(cat)}
                     />{" "}
                     {cat}
                   </Label>
@@ -192,6 +201,7 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
         </Row>
       )}
 
+      {/* Table */}
       <h2 className="text-center mb-4 page-title">Events</h2>
       {loading ? (
         <p className="text-center">Loading events...</p>
@@ -206,3 +216,4 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
 };
 
 export default OlympiadTable;
+
