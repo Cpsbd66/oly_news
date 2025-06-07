@@ -42,7 +42,7 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
     const todayLocal = moment().utcOffset(6).startOf("day");
     const eventDate = moment(dateStr, "YYYY-MM-DD").utcOffset(6).startOf("day");
   
-    const diff = date.diff(today, "days");
+    const diff = eventDate.diff(todayLocal, "days");
     if (diff > 0) return `${diff} days left`;
     if (diff === 0) return "Happening Today";
     return "Event Concluded";
