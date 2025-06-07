@@ -25,6 +25,7 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
     "Debate",
     "Cultural & Language",
     "Programming",
+    "Competitive Programming",
     "Technology",
     "Sports",
     "Miscellaneous"

@@ -101,6 +101,7 @@ const AddEventForm = ({ onAdd }) => {
               "Debate",
               "Cultural & Language",
               "Programming",
+              "Competitive Programming",
               "Technology",
               "Sports",
               "Miscellaneous",
