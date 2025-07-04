@@ -40,9 +40,7 @@ const MainNavbar = () => {
             alt="Kytalist Logo"
             className="navbar-brand-logo"
           />
-          <span className="d-flex align-items-center ms-2">
-            Kytalist
-          </span>
+          <span className="d-flex align-items-center ms-2">Kytalist</span>
         </NavbarBrand>
         <NavbarToggler onClick={toggleNavbar} />
       </Container>
@@ -55,8 +53,6 @@ const MainNavbar = () => {
                 Home
               </NavLink>
             </NavItem>
-
-            {/* Events Dropdown */}
             <Dropdown nav isOpen={eventsOpen} toggle={toggleEvents}>
               <DropdownToggle nav caret className="nav-link">
                 Events
@@ -67,14 +63,16 @@ const MainNavbar = () => {
                 <DropdownItem tag={RRNavLink} to="/events/debate">Debate</DropdownItem>
                 <DropdownItem tag={RRNavLink} to="/events/cultural_language">Cultural & Language</DropdownItem>
                 <DropdownItem tag={RRNavLink} to="/events/programming">Programming</DropdownItem>
-                <DropdownItem tag={RRNavLink} to="/events/competitive_programming">Competitive Programming</DropdownItem>
                 <DropdownItem tag={RRNavLink} to="/events/technology">Technology</DropdownItem>
                 <DropdownItem tag={RRNavLink} to="/events/sports">Sports</DropdownItem>
                 <DropdownItem tag={RRNavLink} to="/events/miscellaneous">Miscellaneous</DropdownItem>
               </DropdownMenu>
             </Dropdown>
-
-            {/* Contact Dropdown */}
+            <NavItem>
+              <NavLink tag={RRNavLink} to="/cplist" className="nav-link">
+                CPList
+              </NavLink>
+            </NavItem>
             <Dropdown nav isOpen={contactOpen} toggle={toggleContact}>
               <DropdownToggle nav caret className="nav-link">
                 Contact
@@ -85,8 +83,6 @@ const MainNavbar = () => {
               </DropdownMenu>
             </Dropdown>
           </Nav>
-
-          {/* Theme Toggle */}
           <div className="theme-switch-wrapper ms-3 mt-2 mt-md-0">
             <label className="theme-switch">
               <input type="checkbox" checked={darkMode} onChange={toggleTheme} />
