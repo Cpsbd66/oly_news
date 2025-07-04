@@ -275,7 +275,7 @@ const AdminPage = () => {
                         "Math & Science",
                         "Debate",
                         "Cultural & Language",
-                        "Programming",
+                        "Programming", 
                         "Competitive Programming",
                         "Technology",
                         "Sports",
