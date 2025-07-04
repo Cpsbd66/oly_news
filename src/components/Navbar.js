@@ -42,9 +42,6 @@ const MainNavbar = () => {
           />
           <span className="d-flex align-items-center ms-2">
             Kytalist
-            <span className="beta-label ms-2">
-              <em>βeta</em>
-            </span>
           </span>
         </NavbarBrand>
         <NavbarToggler onClick={toggleNavbar} />
