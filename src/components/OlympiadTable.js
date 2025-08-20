@@ -115,7 +115,11 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
         <tbody>
           {data.map((o, i) => (
             <tr key={i}>
-              <td>{o.date || "TBA"}</td>
+              <td>
+                {o.date
+                  ? moment(o.date, "YYYY-MM-DD").format("DD-MM-YY")
+                  : "TBA"}
+              </td>
               <td>
                 <a
                   href={o.link}

@@ -43,7 +43,6 @@ const AddEventForm = ({ onAdd }) => {
             id="date"
             value={form.date}
             onChange={(e) => setForm({ ...form, date: e.target.value })}
-            required
           />
         </FormGroup>
 
