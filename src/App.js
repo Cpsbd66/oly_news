@@ -22,7 +22,7 @@ function App() {
 
   const [darkMode, setDarkMode] = useState(() => {
     const saved = localStorage.getItem("theme");
-    return saved ? saved === "dark" : true; // default to dark
+    return saved ? saved === "dark" : true;
   });
 
   useEffect(() => {
@@ -44,12 +44,17 @@ function App() {
     fetchData();
   }, []);
 
+  const cpOlympiads = olympiads.filter((o) =>
+    Array.isArray(o.category)
+      ? o.category.includes("Competitive Programming")
+      : o.category === "Competitive Programming"
+  );
+
   return (
     <ThemeContext.Provider value={{ darkMode, toggleTheme }}>
       <div className={darkMode ? "dark-mode" : "light-mode"}>
         <div className="page-wrapper">
           {!isAdmin && <MainNavbar />}
-
           <div className="page-content">
             <Routes>
               <Route
@@ -59,6 +64,10 @@ function App() {
               <Route
                 path="/events/:slug"
                 element={<EventCategoryPage olympiads={olympiads} loading={loading} />}
+              />
+              <Route
+                path="/cplist"
+                element={<OlympiadTable olympiads={cpOlympiads} loading={loading} />}
               />
               <Route
                 path="/contact/add-event"
@@ -71,7 +80,6 @@ function App() {
               <Route path="/admin" element={<AdminPage />} />
             </Routes>
           </div>
-
           {!isAdmin && <Footer />}
           {!isAdmin && <SubscriptionPopup />} {/* 👈 show popup for non-admin */}
         </div>
