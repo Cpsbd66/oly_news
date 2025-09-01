@@ -4,32 +4,71 @@ import { Form, FormGroup, Label, Input, Button, Container } from "reactstrap";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../firebase";
 
+const CATEGORIES = [
+  "National",
+  "Math & Science",
+  "Debate",
+  "Cultural & Language",
+  "Programming",
+  "Competitive Programming",
+  "Technology",
+  "Sports",
+  "Miscellaneous",
+];
+
 const AddEventForm = ({ onAdd }) => {
   const [form, setForm] = useState({
     date: "",
     name: "",
     organization: "",
     link: "",
-    type: "", 
-    category: ""
+    type: "",
+    category: [],        // store as array
+    adminPinned: false,  // 🔴 global pin flag
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await addDoc(collection(db, "olympiads"), form);
+      // Normalize payload
+      const payload = {
+        ...form,
+        name: form.name.trim(),
+        organization: form.organization.trim(),
+        link: form.link.trim(),
+        // ensure array
+        category: Array.isArray(form.category) ? form.category : [],
+        // optional fields if empty
+        type: form.type || "",
+      };
+
+      await addDoc(collection(db, "olympiads"), payload);
       alert("Event added!");
+
+      // reset form
       setForm({
         date: "",
         name: "",
         organization: "",
         link: "",
         type: "",
+        category: [],
+        adminPinned: false,
       });
-      onAdd(); // refresh table
+
+      onAdd && onAdd(); // refresh table
     } catch (err) {
       console.error(err);
       alert("Error adding event.");
+    }
+  };
+
+  const toggleCategory = (cat) => {
+    const current = Array.isArray(form.category) ? form.category : [];
+    if (current.includes(cat)) {
+      setForm({ ...form, category: current.filter((c) => c !== cat) });
+    } else {
+      setForm({ ...form, category: [...current, cat] });
     }
   };
 
@@ -83,7 +122,6 @@ const AddEventForm = ({ onAdd }) => {
             type="select"
             value={form.type}
             onChange={(e) => setForm({ ...form, type: e.target.value })}
-            required
           >
             <option value="">Select Type</option>
             <option>Online</option>
@@ -91,39 +129,17 @@ const AddEventForm = ({ onAdd }) => {
             <option>Online & Offline</option>
           </Input>
         </FormGroup>
+
         <FormGroup>
-          <Label for="category">Categories</Label>
+          <Label>Categories</Label>
           <div className="d-flex flex-wrap">
-            {[
-              "National",
-              "Math & Science",
-              "Debate",
-              "Cultural & Language",
-              "Programming", 
-              "Competitive Programming",
-              "Technology",
-              "Sports",
-              "Miscellaneous",
-            ].map((cat) => (
+            {CATEGORIES.map((cat) => (
               <FormGroup check inline key={cat} className="me-3 mb-2">
                 <Label check>
                   <Input
                     type="checkbox"
-                    checked={form.category?.includes(cat)}
-                    onChange={() => {
-                      const existing = form.category || [];
-                      if (existing.includes(cat)) {
-                        setForm({
-                          ...form,
-                          category: existing.filter((c) => c !== cat),
-                        });
-                      } else {
-                        setForm({
-                          ...form,
-                          category: [...existing, cat],
-                        });
-                      }
-                    }}
+                    checked={Array.isArray(form.category) && form.category.includes(cat)}
+                    onChange={() => toggleCategory(cat)}
                   />{" "}
                   {cat}
                 </Label>
@@ -132,6 +148,18 @@ const AddEventForm = ({ onAdd }) => {
           </div>
         </FormGroup>
 
+        <FormGroup check className="mb-3">
+          <Label check>
+            <Input
+              type="checkbox"
+              checked={form.adminPinned}
+              onChange={(e) =>
+                setForm({ ...form, adminPinned: e.target.checked })
+              }
+            />{" "}
+            Pin this event globally
+          </Label>
+        </FormGroup>
 
         <Button color="success" type="submit">
           Add Event
@@ -142,3 +170,4 @@ const AddEventForm = ({ onAdd }) => {
 };
 
 export default AddEventForm;
+

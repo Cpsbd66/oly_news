@@ -10,6 +10,7 @@ import OlympiadTable from "./components/OlympiadTable";
 import EventCategoryPage from "./components/EventCategoryPage";
 import ContactForm from "./components/ContactForm";
 import AdminPage from "./components/AdminPage";
+import SubscriptionPopup from "./components/SubscriptionPopup"; // 👈 added
 
 import "./styles.css";
 
@@ -80,6 +81,7 @@ function App() {
             </Routes>
           </div>
           {!isAdmin && <Footer />}
+          {!isAdmin && <SubscriptionPopup />} {/* 👈 show popup for non-admin */}
         </div>
       </div>
     </ThemeContext.Provider>
@@ -87,3 +89,4 @@ function App() {
 }
 
 export default App;
+

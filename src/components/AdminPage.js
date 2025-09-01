@@ -1,3 +1,4 @@
+// src/components/AdminPage.js
 import React, { useEffect, useState } from "react";
 import {
   Container,
@@ -27,6 +28,18 @@ import {
 import { db, auth } from "../firebase";
 import AddEventForm from "../components/AddEventForm";
 
+const CATEGORIES = [
+  "National",
+  "Math & Science",
+  "Debate",
+  "Cultural & Language",
+  "Programming",
+  "Competitive Programming",
+  "Technology",
+  "Sports",
+  "Miscellaneous",
+];
+
 const AdminPage = () => {
   const [user, setUser] = useState(null);
   const [loginInfo, setLoginInfo] = useState({ email: "", password: "" });
@@ -36,9 +49,9 @@ const AdminPage = () => {
 
   const fetchOlympiads = async () => {
     const snapshot = await getDocs(collection(db, "olympiads"));
-    const data = snapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
+    const data = snapshot.docs.map((d) => ({
+      id: d.id,
+      ...d.data(),
     }));
     setOlympiads(data);
   };
@@ -68,14 +81,27 @@ const AdminPage = () => {
   };
 
   const handleEditClick = (event) => {
-    setCurrentEvent(event);
+    // Normalize category to array
+    const normalized = {
+      ...event,
+      category: Array.isArray(event.category) ? event.category : [],
+      adminPinned: !!event.adminPinned,
+    };
+    setCurrentEvent(normalized);
     setEditModal(true);
   };
 
   const handleEditSubmit = async () => {
+    if (!currentEvent) return;
     const docRef = doc(db, "olympiads", currentEvent.id);
     const { id, ...eventData } = currentEvent;
-    await updateDoc(docRef, eventData);
+    // Ensure clean data
+    const payload = {
+      ...eventData,
+      category: Array.isArray(eventData.category) ? eventData.category : [],
+      adminPinned: !!eventData.adminPinned,
+    };
+    await updateDoc(docRef, payload);
     setEditModal(false);
     fetchOlympiads();
   };
@@ -134,31 +160,36 @@ const AdminPage = () => {
                 <th>Link</th>
                 <th>Type</th>
                 <th>Category</th>
+                <th>Pinned</th>{/* 🔴 show pin status */}
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {olympiads.map((event) => (
                 <tr key={event.id}>
-                  <td>{event.date}</td>
+                  <td>{event.date || "—"}</td>
                   <td>{event.name}</td>
                   <td>{event.organization}</td>
                   <td>
-                    <a
-                      href={event.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Link
-                    </a>
+                    {event.link ? (
+                      <a
+                        href={event.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Link
+                      </a>
+                    ) : (
+                      "—"
+                    )}
                   </td>
                   <td>{event.type || "—"}</td>
                   <td>
-                    {event.category && event.category.length > 0
+                    {Array.isArray(event.category) && event.category.length > 0
                       ? event.category.join(", ")
                       : "—"}
                   </td>
-
+                  <td>{event.adminPinned ? <span className="text-danger">📌</span> : "—"}</td>
                   <td>
                     <Button
                       color="warning"
@@ -199,7 +230,7 @@ const AdminPage = () => {
                     <Label for="editName">Name</Label>
                     <Input
                       id="editName"
-                      value={currentEvent.name}
+                      value={currentEvent.name || ""}
                       onChange={(e) =>
                         setCurrentEvent({
                           ...currentEvent,
@@ -213,7 +244,7 @@ const AdminPage = () => {
                     <Input
                       id="editDate"
                       type="date"
-                      value={currentEvent.date}
+                      value={currentEvent.date || ""}
                       onChange={(e) =>
                         setCurrentEvent({
                           ...currentEvent,
@@ -226,7 +257,7 @@ const AdminPage = () => {
                     <Label for="editOrganization">Organization</Label>
                     <Input
                       id="editOrganization"
-                      value={currentEvent.organization}
+                      value={currentEvent.organization || ""}
                       onChange={(e) =>
                         setCurrentEvent({
                           ...currentEvent,
@@ -239,7 +270,7 @@ const AdminPage = () => {
                     <Label for="editLink">Link</Label>
                     <Input
                       id="editLink"
-                      value={currentEvent.link}
+                      value={currentEvent.link || ""}
                       onChange={(e) =>
                         setCurrentEvent({
                           ...currentEvent,
@@ -259,7 +290,8 @@ const AdminPage = () => {
                           ...currentEvent,
                           type: e.target.value,
                         })
-                      }>
+                      }
+                    >
                       <option value="">Select Type</option>
                       <option>Online</option>
                       <option>Offline</option>
@@ -268,47 +300,57 @@ const AdminPage = () => {
                   </FormGroup>
 
                   <FormGroup>
-                    <Label for="editCategories">Category</Label>
+                    <Label>Category</Label>
                     <div className="d-flex flex-wrap">
-                      {[
-                        "National",
-                        "Math & Science",
-                        "Debate",
-                        "Cultural & Language",
-                        "Programming", 
-                        "Competitive Programming",
-                        "Technology",
-                        "Sports",
-                        "Miscellaneous",
-                      ].map((cat) => (
-                        <FormGroup check inline key={cat} className="me-3 mb-2">
-                          <Label check>
-                            <Input
-                              type="checkbox"
-                              checked={
-                                Array.isArray(currentEvent.category) &&
-                                currentEvent.category.includes(cat)
-                              }
-                              onChange={(e) => {
-                                const updatedCategories = Array.isArray(currentEvent.category)
-                                  ? [...currentEvent.category]
-                                  : [];
-                                if (e.target.checked) {
-                                  updatedCategories.push(cat);
-                                } else {
-                                  const index = updatedCategories.indexOf(cat);
-                                  if (index > -1) updatedCategories.splice(index, 1);
-                                }
-                                setCurrentEvent({ ...currentEvent, category: updatedCategories });
-                              }}
-                            />{" "}
-                            {cat}
-                          </Label>
-                        </FormGroup>
-                      ))}
+                      {CATEGORIES.map((cat) => {
+                        const checked =
+                          Array.isArray(currentEvent.category) &&
+                          currentEvent.category.includes(cat);
+                        return (
+                          <FormGroup check inline key={cat} className="me-3 mb-2">
+                            <Label check>
+                              <Input
+                                type="checkbox"
+                                checked={checked}
+                                onChange={(e) => {
+                                  const arr = Array.isArray(currentEvent.category)
+                                    ? [...currentEvent.category]
+                                    : [];
+                                  if (e.target.checked) {
+                                    if (!arr.includes(cat)) arr.push(cat);
+                                  } else {
+                                    const idx = arr.indexOf(cat);
+                                    if (idx > -1) arr.splice(idx, 1);
+                                  }
+                                  setCurrentEvent({
+                                    ...currentEvent,
+                                    category: arr,
+                                  });
+                                }}
+                              />{" "}
+                              {cat}
+                            </Label>
+                          </FormGroup>
+                        );
+                      })}
                     </div>
                   </FormGroup>
 
+                  <FormGroup check className="mb-0">
+                    <Label check>
+                      <Input
+                        type="checkbox"
+                        checked={!!currentEvent.adminPinned}
+                        onChange={(e) =>
+                          setCurrentEvent({
+                            ...currentEvent,
+                            adminPinned: e.target.checked,
+                          })
+                        }
+                      />{" "}
+                      Globally Pin this event
+                    </Label>
+                  </FormGroup>
                 </Form>
               )}
             </ModalBody>
@@ -316,10 +358,7 @@ const AdminPage = () => {
               <Button color="primary" onClick={handleEditSubmit}>
                 Save Changes
               </Button>{" "}
-              <Button
-                color="secondary"
-                onClick={() => setEditModal(false)}
-              >
+              <Button color="secondary" onClick={() => setEditModal(false)}>
                 Cancel
               </Button>
             </ModalFooter>
@@ -331,3 +370,4 @@ const AdminPage = () => {
 };
 
 export default AdminPage;
+

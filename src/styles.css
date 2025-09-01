@@ -513,3 +513,83 @@ input:checked + .slider::before {
   color: #89ccff;
   border-color: #666;
 }
+
+
+/* OVERWRITES */
+/* Minimalist Cyan-Blue Theme Overrides */
+body, html {
+  font-family: "Quicksand", "Segoe UI", sans-serif !important;
+}
+
+/* Global dark mode background and text */
+.dark-mode {
+  background-color: #0b1a2b !important;   /* deep navy */
+  color: #e6f7ff !important;              /* soft cyan-white */
+}
+
+/* Links */
+.dark-mode a {
+  color: #00c9ff !important;              /* cyan accent */
+}
+.dark-mode a:hover {
+  color: #66d9ff !important;
+}
+
+/* Tables */
+.dark-mode .table {
+  background-color: #0f2238 !important;   /* navy table */
+  color: #e6f7ff !important;
+  font-size: 0.95rem;                     /* slightly smaller */
+  font-weight: 500;
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+
+.dark-mode .table thead th {
+  background-color: #13324e !important;   /* brighter navy header */
+  color: #66d9ff !important;              /* cyan header text */
+  border-color: #1c4563 !important;
+  font-weight: 600;
+}
+
+.dark-mode .table tbody td {
+  background-color: #0f2238 !important;
+  color: #e6f7ff !important;
+  border-color: #1c4563 !important;
+  padding: 0.75rem;
+}
+
+.dark-mode .table tbody tr:hover {
+  background-color: #14476a !important;   /* cyan hover */
+  transition: background-color 0.25s ease;
+}
+
+/* Striped rows */
+.dark-mode .table-striped tbody tr:nth-of-type(odd) {
+  background-color: #112b44 !important;
+}
+
+/* Pinned 📌 events look special */
+.dark-mode .table .pinned-row {
+  background-color: #13324e !important;
+  box-shadow: inset 0 0 0 2px #00c9ff;
+}
+
+/* Badges for type */
+.dark-mode .badge {
+  border-radius: 0.6rem;
+  font-weight: 600;
+  padding: 0.35em 0.65em;
+}
+.dark-mode .badge.bg-info {
+  background-color: #00c9ff !important;
+  color: #0b1a2b !important;
+}
+.dark-mode .badge.bg-success {
+  background-color: #12e6a8 !important;
+  color: #0b1a2b !important;
+}
+.dark-mode .badge.bg-warning {
+  background-color: #ffd966 !important;
+  color: #0b1a2b !important;
+}

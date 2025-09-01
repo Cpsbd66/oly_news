@@ -1,5 +1,5 @@
 // src/components/OlympiadTable.js
-import React, { useState, useMemo, useContext } from "react";
+import React, { useState, useMemo, useContext, useEffect } from "react";
 import {
   Table,
   Badge,
@@ -13,41 +13,45 @@ import {
 } from "reactstrap";
 import moment from "moment";
 import { ThemeContext } from "../App";
-import { useLocation } from "react-router-dom";
+import { useLocation, NavLink } from "react-router-dom";
+import {
+  getUserPins,
+  toggleUserPin,
+  isPinnedLocally,
+} from "../utils/localStorageUtils";
 
 const OlympiadTable = ({ olympiads = [], loading }) => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  const [localPins, setUserPins] = useState(getUserPins());
 
   const { darkMode } = useContext(ThemeContext);
   const location = useLocation();
   const isHomePage = location.pathname === "/";
 
   const allCategories = [
-    "National",
-    "Math & Science",
-    "Debate",
-    "Cultural & Language",
-    "Programming",
-    "Technology",
-    "Sports",
-    "Miscellaneous",
+    { name: "National", slug: "national" },
+    { name: "Math & Science", slug: "math_science" },
+    { name: "Debate", slug: "debate" },
+    { name: "Cultural & Language", slug: "cultural_language" },
+    { name: "Programming", slug: "programming" },
+    { name: "Competitive Programming", slug: "competitive_programming"},
+    { name: "Technology", slug: "technology" },
+    { name: "Sports", slug: "sports" },
+    { name: "Miscellaneous", slug: "miscellaneous" },
   ];
 
   const today = moment();
 
   const handleCheckboxChange = (value) => {
     setSelectedCategories((prev) =>
-      prev.includes(value)
-        ? prev.filter((v) => v !== value)
-        : [...prev, value]
+      prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]
     );
   };
 
   const getCountdown = (dateStr) => {
     if (!dateStr) return "Date Pending";
-
     const todayLocal = moment().utcOffset(6).startOf("day");
     const eventDate = moment(dateStr, "YYYY-MM-DD").utcOffset(6).startOf("day");
 
@@ -56,6 +60,13 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
     if (diff === 0) return "Happening Today";
     return "Event Concluded";
   };
+
+  // 🔹 Sync localStorage pins
+  useEffect(() => {
+    const syncPins = () => setUserPins(getUserPins());
+    window.addEventListener("storage", syncPins);
+    return () => window.removeEventListener("storage", syncPins);
+  }, []);
 
   const filteredOlympiads = useMemo(() => {
     return olympiads.filter((event) => {
@@ -72,27 +83,38 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
         event.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         event.organization?.toLowerCase().includes(searchTerm.toLowerCase());
 
-      const matchesCategory =
-        selectedCategories.length === 0 ||
-        (Array.isArray(event.category)
-          ? event.category.some((cat) => selectedCategories.includes(cat))
-          : selectedCategories.includes(event.category));
-
-      return matchesSearch && matchesCategory;
+      return matchesSearch;
     });
-  }, [olympiads, searchTerm, selectedCategories, isHomePage]);
+  }, [olympiads, searchTerm, isHomePage]);
+
+  // 🔹 Separate pinned/upcoming/concluded
+  const pinned = filteredOlympiads.filter(
+    (o) => o.adminPinned || isPinnedLocally(o.name)
+  );
 
   const upcoming = filteredOlympiads
     .filter(
-      (o) => !o.date || moment(o.date, "YYYY-MM-DD").isSameOrAfter(today, "day")
+      (o) =>
+        !pinned.includes(o) &&
+        (!o.date || moment(o.date, "YYYY-MM-DD").isSameOrAfter(today, "day"))
     )
     .sort((a, b) =>
       moment(a.date || "9999-12-31").diff(moment(b.date || "9999-12-31"))
     );
 
   const concluded = filteredOlympiads
-    .filter((o) => o.date && moment(o.date, "YYYY-MM-DD").isBefore(today, "day"))
+    .filter(
+      (o) =>
+        !pinned.includes(o) &&
+        o.date &&
+        moment(o.date, "YYYY-MM-DD").isBefore(today, "day")
+    )
     .sort((a, b) => moment(b.date).diff(moment(a.date)));
+
+  const handlePinToggle = (eventName) => {
+    toggleUserPin(eventName);
+    setUserPins(getUserPins());
+  };
 
   const renderSection = (data, title, badgeColor, isConcluded) => (
     <>
@@ -110,6 +132,7 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
             <th>Organization</th>
             <th>Type</th>
             <th>Countdown</th>
+            <th>Pin</th>
           </tr>
         </thead>
         <tbody>
@@ -151,6 +174,19 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
               <td className={isConcluded ? "text-muted" : ""}>
                 {getCountdown(o.date)}
               </td>
+              <td>
+                {o.adminPinned ? (
+                  <span className="text-danger">📌</span>
+                ) : (
+                  <Button
+                    size="sm"
+                    color={isPinnedLocally(o.name) ? "warning" : "secondary"}
+                    onClick={() => handlePinToggle(o.name)}
+                  >
+                    {isPinnedLocally(o.name) ? "Unpin" : "Pin"}
+                  </Button>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
@@ -160,6 +196,22 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
 
   return (
     <Container className="mt-5">
+      {/* 🔹 Horizontal Event Categories */}
+      <Row className="justify-content-center mb-4">
+        <Col xs="12" className="d-flex flex-wrap justify-content-center gap-3">
+          {allCategories.map((cat) => (
+            <NavLink
+              key={cat.slug}
+              to={`/events/${cat.slug}`}
+              className="btn btn-outline-primary btn-sm"
+              activeclassname="active"
+            >
+              {cat.name}
+            </NavLink>
+          ))}
+        </Col>
+      </Row>
+
       {/* Search + Filter toggle */}
       <Row className="align-items-center justify-content-center mb-3 g-2">
         <Col xs={9} sm={10} md={6}>
@@ -171,32 +223,23 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </Col>
-        <Col xs="auto">
-          <Button
-            className="filter-toggle-btn text-filter px-4"
-            color={darkMode ? "dark" : "secondary"}
-            onClick={() => setShowFilters((prev) => !prev)}
-          >
-            {showFilters ? "Hide" : "Filter"}
-          </Button>
-        </Col>
       </Row>
 
-      {/* Category Filters */}
+      {/* Category Filters (checkbox style, optional) */}
       {showFilters && (
         <Row className="mb-4 justify-content-center">
           <Col xs="12" md="10" className="text-center">
             <strong className="text-primary">Filter by Category:</strong>
             <div className="filter-box d-flex flex-wrap justify-content-center mt-2">
               {allCategories.map((cat) => (
-                <FormGroup check inline key={cat} className="me-3">
+                <FormGroup check inline key={cat.name} className="me-3">
                   <Label check>
                     <Input
                       type="checkbox"
-                      checked={selectedCategories.includes(cat)}
-                      onChange={() => handleCheckboxChange(cat)}
+                      checked={selectedCategories.includes(cat.name)}
+                      onChange={() => handleCheckboxChange(cat.name)}
                     />{" "}
-                    {cat}
+                    {cat.name}
                   </Label>
                 </FormGroup>
               ))}
@@ -205,12 +248,13 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
         </Row>
       )}
 
-      {/* Table */}
+      {/* Tables */}
       <h2 className="text-center mb-4 page-title">Events</h2>
       {loading ? (
         <p className="text-center">Loading events...</p>
       ) : (
         <>
+          {renderSection(pinned, "📌 Pinned Events", "danger", false)}
           {renderSection(upcoming, "Upcoming Olympiads", "info", false)}
           {renderSection(concluded, "Concluded Olympiads", "secondary", true)}
         </>
@@ -220,4 +264,3 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
 };
 
 export default OlympiadTable;
-
