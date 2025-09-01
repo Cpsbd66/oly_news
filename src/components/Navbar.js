@@ -20,11 +20,9 @@ import { ThemeContext } from "../App";
 const MainNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [contactOpen, setContactOpen] = useState(false);
-  const [eventsOpen, setEventsOpen] = useState(false);
 
   const toggleNavbar = () => setIsOpen(!isOpen);
   const toggleContact = () => setContactOpen((prev) => !prev);
-  const toggleEvents = () => setEventsOpen((prev) => !prev);
 
   const { darkMode, toggleTheme } = useContext(ThemeContext);
 
@@ -42,9 +40,6 @@ const MainNavbar = () => {
           />
           <span className="d-flex align-items-center ms-2">
             Kytalist
-            <span className="beta-label ms-2">
-              <em>βeta</em>
-            </span>
           </span>
         </NavbarBrand>
         <NavbarToggler onClick={toggleNavbar} />
@@ -58,24 +53,6 @@ const MainNavbar = () => {
                 Home
               </NavLink>
             </NavItem>
-
-            {/* Events Dropdown */}
-            <Dropdown nav isOpen={eventsOpen} toggle={toggleEvents}>
-              <DropdownToggle nav caret className="nav-link">
-                Events
-              </DropdownToggle>
-              <DropdownMenu className={`custom-dropdown text-center ${darkMode ? "dropdown-dark" : ""}`}>
-                <DropdownItem tag={RRNavLink} to="/events/national">National</DropdownItem>
-                <DropdownItem tag={RRNavLink} to="/events/math_science">Math & Science</DropdownItem>
-                <DropdownItem tag={RRNavLink} to="/events/debate">Debate</DropdownItem>
-                <DropdownItem tag={RRNavLink} to="/events/cultural_language">Cultural & Language</DropdownItem>
-                <DropdownItem tag={RRNavLink} to="/events/programming">Programming</DropdownItem>
-                <DropdownItem tag={RRNavLink} to="/events/competitive_programming">Competitive Programming</DropdownItem>
-                <DropdownItem tag={RRNavLink} to="/events/technology">Technology</DropdownItem>
-                <DropdownItem tag={RRNavLink} to="/events/sports">Sports</DropdownItem>
-                <DropdownItem tag={RRNavLink} to="/events/miscellaneous">Miscellaneous</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
 
             {/* Contact Dropdown */}
             <Dropdown nav isOpen={contactOpen} toggle={toggleContact}>
