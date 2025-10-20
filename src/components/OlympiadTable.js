@@ -36,7 +36,7 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
     { name: "Debate", slug: "debate" },
     { name: "Cultural & Language", slug: "cultural_language" },
     { name: "Programming", slug: "programming" },
-    { name: "Competitive Programming", slug: "competitive_programming"},
+    { name: "Competitive Programming", slug: "competitive_programming" },
     { name: "Technology", slug: "technology" },
     { name: "Sports", slug: "sports" },
     { name: "Miscellaneous", slug: "miscellaneous" },
@@ -68,9 +68,21 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
     return () => window.removeEventListener("storage", syncPins);
   }, []);
 
+  // 🔹 Prepare pinned list first — includes both admin and local pins
+  const allPinned = useMemo(
+    () => olympiads.filter((o) => o.adminPinned || isPinnedLocally(o.name)),
+    [olympiads, localPins]
+  );
+
+  // 🔹 Filtering logic (separates pinning from category rules)
   const filteredOlympiads = useMemo(() => {
     return olympiads.filter((event) => {
-      // Skip Competitive Programming on homepage
+      const isEventPinned = allPinned.includes(event);
+
+      // If it's pinned, always show regardless of anything else
+      if (isEventPinned) return true;
+
+      // On Home page, hide Competitive Programming (only if not pinned)
       if (
         isHomePage &&
         Array.isArray(event.category) &&
@@ -79,18 +91,17 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
         return false;
       }
 
+      // Search filter
       const matchesSearch =
         event.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
         event.organization?.toLowerCase().includes(searchTerm.toLowerCase());
 
       return matchesSearch;
     });
-  }, [olympiads, searchTerm, isHomePage]);
+  }, [olympiads, searchTerm, isHomePage, allPinned]);
 
   // 🔹 Separate pinned/upcoming/concluded
-  const pinned = filteredOlympiads.filter(
-    (o) => o.adminPinned || isPinnedLocally(o.name)
-  );
+  const pinned = allPinned;
 
   const upcoming = filteredOlympiads
     .filter(
@@ -212,7 +223,7 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
         </Col>
       </Row>
 
-      {/* Search + Filter toggle */}
+      {/* Search */}
       <Row className="align-items-center justify-content-center mb-3 g-2">
         <Col xs={9} sm={10} md={6}>
           <Input
@@ -225,7 +236,7 @@ const OlympiadTable = ({ olympiads = [], loading }) => {
         </Col>
       </Row>
 
-      {/* Category Filters (checkbox style, optional) */}
+      {/* Optional category filters */}
       {showFilters && (
         <Row className="mb-4 justify-content-center">
           <Col xs="12" md="10" className="text-center">
