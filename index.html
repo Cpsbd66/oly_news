@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="kytalist.ico">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kytalist - Under Maintenance</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
@@ -9,9 +10,9 @@
         body {
             margin: 0;
             padding: 0;
-            /* The deep purple background */
+            /* Kytalist deep purple background */
             background-color: #271647; 
-            /* The dot matrix pattern */
+            /* Subtle dot matrix pattern */
             background-image: radial-gradient(#4a3673 2px, transparent 2px);
             background-size: 35px 35px;
             background-position: 0 0;
@@ -35,7 +36,7 @@
         }
 
         .logo {
-            width: 200px; /* Adjust this to make your logo bigger/smaller */
+            width: 200px; 
             height: auto;
             margin-bottom: 0.5rem;
         }
@@ -48,10 +49,19 @@
             line-height: 1.4;
         }
 
+        /* Updated to create the transparent blending effect */
         .illustration {
-            width: 260px;
+            width: 280px;
             height: auto;
             margin: 1.5rem 0;
+            border-radius: 12px; /* Soft corner */
+            opacity: 0.9; /* Slightly see-through */
+            
+            /* Blends the video into the dark background */
+            mix-blend-mode: color-dodge; 
+
+            /* Soft purple glow to sell the hologram effect */
+            filter: drop-shadow(0 0 20px rgba(188, 225, 255, 0.4)); 
         }
 
         .footer-links {
@@ -65,7 +75,7 @@
 
         @media (max-width: 600px) {
             h1 { font-size: 1.8rem; }
-            .illustration { width: 200px; }
+            .illustration { width: 220px; }
             .footer-links { gap: 1.5rem; font-size: 0.9rem; }
         }
     </style>
@@ -75,42 +85,12 @@
     <div class="container">
         <img src="Kytalist profile 01.png" alt="Kytalist Logo" class="logo">
 
-        <h1>kytalist.xyz<br>under maintenance</h1>
+        <h1>kytalist.xyz<br>Under Maintenance</h1>
 
-        <svg class="illustration" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <path d="M40 160 Q 60 160, 60 145 Q 60 130, 80 130 L 120 130 Q 140 130, 140 145 Q 140 160, 160 160 Z" fill="#bce1ff" opacity="0.8"/>
-            <rect x="50" y="165" width="100" height="6" rx="3" fill="#bce1ff" opacity="0.8"/>
-            
-            <g fill="#25a4eb">
-                <circle cx="100" cy="95" r="45" />
-                <rect x="92" y="35" width="16" height="120" rx="2" />
-                <rect x="35" y="87" width="120" height="16" rx="2" />
-                <rect x="55" y="50" width="16" height="90" rx="2" transform="rotate(45 63 95)" />
-                <rect x="55" y="50" width="16" height="90" rx="2" transform="rotate(-45 137 95)" />
-            </g>
-            <circle cx="100" cy="95" r="28" fill="#271647" />
-
-            <g transform="translate(-15, 0)">
-                <rect x="106" y="50" width="4" height="40" fill="#ffffff" />
-                <path d="M106 50 L 105 40 L 111 40 L 110 50 Z" fill="#ffffff" />
-                <rect x="103" y="90" width="10" height="45" rx="3" fill="#ffffff" />
-                <rect x="103" y="95" width="10" height="3" fill="#25a4eb" />
-                <rect x="103" y="105" width="10" height="3" fill="#25a4eb" />
-            </g>
-
-            <g transform="translate(15, 0)">
-                <rect x="96" y="65" width="8" height="60" rx="4" fill="#ffffff" />
-                <path d="M100 45 C 112 45 118 52 118 60 L 110 65 C 110 60 105 55 100 55 C 95 55 90 60 90 65 L 82 60 C 82 52 88 45 100 45 Z" fill="#ffffff" />
-                <circle cx="100" cy="130" r="10" fill="#ffffff" />
-                <circle cx="100" cy="130" r="4" fill="#271647" />
-            </g>
-
-            <circle cx="145" cy="65" r="12" fill="#25a4eb" />
-            <circle cx="145" cy="65" r="4" fill="#271647" />
-            <path d="M45 65 L 55 80 L 35 80 Z" fill="#ffffff" opacity="0.6" />
-            <circle cx="45" cy="45" r="3" fill="#bce1ff" />
-            <circle cx="160" cy="110" r="4" fill="#ffffff" />
-        </svg>
+        <video class="illustration" autoplay loop muted playsinline>
+            <source src="maintenance.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
 
         <div class="footer-links">
             <span>Discover</span>
