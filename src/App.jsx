@@ -8,11 +8,9 @@ function App() {
       <div className="container">
         <img src={logo} alt="Kytalist Logo" className="logo" />
 
-        <h1>
-          kytalist.xyz
-          <br />
-          Under Maintenance
-        </h1>
+        <h1>kytalist.xyz</h1>
+        <h1>Is</h1>
+        <h1>Under Maintenance</h1>
 
         <video className="illustration" autoPlay loop muted playsInline>
           <source src={maintenanceVideo} type="video/mp4" />

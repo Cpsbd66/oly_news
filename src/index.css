@@ -24,29 +24,29 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
-    padding: 2rem;
+    gap: 0.5rem;
+    padding: 0.5rem;
     max-width: 600px;
 }
 
 .logo {
-    width: 200px; 
+    width: 150px; 
     height: auto;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
 }
 
 h1 {
-    font-size: 2.2rem;
+    font-size: 1.8rem;
     font-weight: 400;
     letter-spacing: 0.5px;
     margin: 0;
-    line-height: 1.4;
+    line-height: 1.2;
 }
 
 .illustration {
-    width: 280px;
+    width: 240px;
     height: auto;
-    margin: 1.5rem 0;
+    margin: 0.25rem 0;
     border-radius: 12px;
     opacity: 0.9;
     mix-blend-mode: color-dodge; 
@@ -55,9 +55,9 @@ h1 {
 
 .footer-links {
     display: flex;
-    gap: 2.5rem;
-    margin-top: 1rem;
-    font-size: 1rem;
+    gap: 1rem;
+    margin-top: 0.25rem;
+    font-size: 0.9rem;
     font-weight: 300;
     color: #e0dced;
 }
